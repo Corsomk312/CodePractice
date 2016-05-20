@@ -1,0 +1,33 @@
+<%= form_for :student, url: '/students' do |f| %>
+<div class="field">
+  Name: <%= f.text_field :name %>
+  </div>
+<div class="field">
+  Gender: <%= f.text_field :gender %>
+  </div>
+  <div class="field">
+  Age: <%= f.number_field :age %>
+  </div>
+  <div class="field">
+  Grade: <%= f.number_field :grade %>
+  </div>
+  <div class="field">
+  Detentions: <%= f.number_field :detentions %>
+  </div>
+  <%= f.fields_for :grades do |g| %>
+
+    <div class="field">
+    History Grade: <%= g.text_field :history %>
+    </div>
+    <div class="field">
+    Science Grade: <%= g.text_field :science %>
+    </div>
+    <div class="field">
+    Math Grade: <%= g.text_field :math %>
+    </div>
+  <% end %>
+  <br>
+   <div class="actions">
+  <%= f.submit "Submit" %>
+</div>
+<% end %>
