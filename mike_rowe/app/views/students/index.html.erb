@@ -1,0 +1,46 @@
+<input type="text" id="textbox1" />
+<h1 class= 'center'> Check out all these Students! </h1>
+<% if @current_user.admin == true %>
+<button id="new-student-button" value="hide/show">Add Student</button>
+<div id="new-student" align="center" style="display: none">
+  <%= render :partial => "newStudent" %>
+</div>
+<% end %>
+<div class = "panel panel-default">
+  <table id="students-list" class="table table-bordered table-striped">
+    <tr class = 'active'>
+      <td></td>
+      <td></td>
+      <td class="middle">Student Name</td>
+      <td class="middle">Gender</td>
+      <td class="middle">Age</td>
+      <td class="middle">Grade</td>
+      <td class="middle">Detentions</td>
+      <td class="middle">History</td>
+      <td class="middle">Science</td>
+      <td class="middle">Math</td>
+    </tr>
+    <% @students.each do |student| %>
+      <tr>
+        <td class="middle add-button">
+          <%= link_to image_tag("https://www.element14.com/community/themes/e14/images/pcb-green-plus-sign.png"), groups_path(:student_id => student.id), remote: true, method: :post, class: "add-student-to-group-link" %>
+        </td>
+        <td class = "middle remove-button" style='display:none'>
+          <a href="/groups/<%=student.id%>" method='delete' class="remove-student-to-group-link"><img src="https://www.virgineastcoasttrains.cab/images/minus_button.png"</img></a>
+        </td>
+
+        <td class="middle"> <%= link_to image_tag('http://placehold.it/50x50') %>
+        <td class="middle"> <%= link_to student.name, show_path(student) %></td>
+        <td class="middle"><%= student.gender %></td>
+        <td class="middle"><%= student.age %></td>
+        <td class="middle"><%= student.grade %></td>
+        <td class="middle"><%= student.detentions%></td>
+        <td class="middle"><%= student.grades["history"] %></td>
+        <td class="middle"><%= student.grades["science"] %></td>
+        <td class="middle"><%= student.grades["math"] %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+
