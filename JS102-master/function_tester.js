@@ -60,3 +60,17 @@ var giveMatches = function(farm){
     farm[i].matches.push(farm[i].friends[random])
   }
 };
+
+var friends = [];
+
+friends.push(animals[0].username, animals[2].username);
+
+var relationships = {}
+relationships.friends = friends
+var matches = []
+relationships.matches = matches
+relationships.friends[2] = animals[3].username
+
+for(var i = 0; i < animals.length; i++){
+  animals[i].relationships = relationships
+};
