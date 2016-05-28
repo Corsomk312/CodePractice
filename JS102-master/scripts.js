@@ -25,7 +25,7 @@ tapeWorm['noises'] = noiseArray
 
 animals = []
 animals.push(tapeWorm)
-var quackers = animals
+var quackers = animals[0]
 animals.unshift(quackers)
 
 var chicken = {
