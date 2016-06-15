@@ -1,0 +1,15 @@
+<div>
+
+  <center>
+
+  <form action=<%="/answers/#{@answer.id}/comments"%> method="post">
+  	<input type="text" name="comment[content]" placeholder="Content" >
+    <input type="hidden" name="comment[user_id]" value="<%= current_user.id %>" >
+    <input type="hidden" name="comment[commentable_id]" value="<%= @answer.id %>" >
+    <input type="hidden" name="comment[commentable_type]" value="Answer" >
+    <input id="question-button-rt" type="submit" value="Add comment">
+  </form>
+
+	</center>
+
+</div>
