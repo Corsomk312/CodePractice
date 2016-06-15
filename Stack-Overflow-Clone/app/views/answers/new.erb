@@ -1,0 +1,15 @@
+<h2>New answer</h2>
+  <form id ="answer_form" action="/questions/<%=@question.id%>/answers" method="post">
+
+  <div class="form">
+    <label for "content">Content: </label>
+    <input type="text" name="answer[content]" placeholder="eg. Place answer.">
+  </div>
+
+<div class="form_submit">
+  <input type="submit" value="Submit">
+  <% if @errors %>
+    <%=@errors%>
+  <%end%>
+</div>
+

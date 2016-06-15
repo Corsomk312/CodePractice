@@ -1,0 +1,59 @@
+
+<div class="container">
+  <h1> <%=@question.title%></h1>
+  <h3> <%=@question.content %></h3>
+
+<div id="display_question_comments">
+	<% @question_comments.each do |comment|%>
+		<% if comment.commentable_id == @question.id %>
+		  <div class="comment"><p>Comment <%=comment.id%>:  <%=comment.content%></p></div>
+		<%end%>
+	<%end%>
+	</div>
+		<div>
+			<center>
+			<form id="submit_question_comment" action=<%="/questions/#{@question.id}/comments"%> method="post">
+		  	<input type="text" name="comment[content]" placeholder="Content" >
+
+		    <input id="question-button-rt" type="submit" value="Add comment">
+	  	</form>
+			</center>
+		</div>
+
+
+
+  <div id="answer_form"><a href="/questions/<%=@question.id%>/answers/new">Create an answer</a></div>
+
+ <div class="answer-container">
+  <%@answers.each do |answer|%>
+	<article id="<%= answer.id %>">
+
+    <a href='/answers/<%= answer.id %>/vote' class="vote-button"></a>
+    <a href='/answers/<%= answer.id %>/downvote' class="down-vote-button"></a>
+    <p>Total Points:
+      <span class='points'> <%= answer.points %></span>
+    </p>
+  </article>
+  	<p class='answer'>Answer <%=answer.id%>:  <%=answer.content%></p>
+			<div id="display_answer_comments">
+				<% answer.comments.each do |comment|%>
+					<% if comment.commentable_id == answer.id %>
+				  		<div class="comment">
+				  		<p>Comment <%=comment.id%>:  <%=comment.content%></p>
+				  		</div>
+			  	<%end%>
+				<%end%>
+  		</div>
+
+		<div>
+			<center>
+			<form id="submit_answer_comment" action=<%="/answers/#{answer.id}/comments"%> method="post">
+		  	<input type="text" name="comment[content]" placeholder="Content" >
+		    <input id="question-button-rt" type="submit" value="Add comment">
+	  	</form>
+			</center>
+		</div>
+	<%end%>
+
+  </div>
+</div>

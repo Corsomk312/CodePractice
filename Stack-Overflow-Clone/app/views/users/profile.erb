@@ -1,0 +1,30 @@
+<h2>Welcome back, <%= current_user.username.capitalize %>!</h2>
+
+<h3>What questions have you asked?</h3>
+<% current_user.questions.each do |question|%>
+<a href="/questions/<%= question.id %>/answers"><%= question.title %></a>
+<hr>
+
+<% end %>
+
+<h3>What answers have you provided?</h3>
+<% current_user.answers.each do |answer|%>
+<%= answer.content %>
+<p>Question associated with your answer:  <a href="/questions/<%= answer.question.id %>/answers"><%= answer.question.title %></a></p>
+<hr>
+
+<% end %>
+
+<h3>Let's look at your comments</h3>
+<% current_user.comments.each do |comment|%>
+<%= comment.content %>
+<hr>
+
+<% end %>
+
+
+<form method="post" action="/logout">
+  <button type="submit">Log out</button>
+</form>
+
+<% current_user.questions%>

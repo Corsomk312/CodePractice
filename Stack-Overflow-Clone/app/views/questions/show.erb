@@ -1,0 +1,27 @@
+
+<form action=<%= "/questions/new" %> method="get">
+    <input id="create-question" type="submit" value="Create A Question">
+</form>
+
+<div class="header">
+  <h1>SNACK OVERFLOW</h1>
+</div>
+
+<div>
+  <h2>Question Title</h2>
+</div>
+
+<div class='question-container'>
+	<% @questions.each do |question| %>
+  <article id="<%= question.id %>">
+
+    <a href='/questions/<%= question.id %>/vote' class="vote-button"></a>
+    <a href='/questions/<%= question.id %>/downvote' class="down-vote-button"></a>
+    <h2><a href='/questions/<%= question.id %>/answers'><%= question.title %></a></h2>
+    <p>Total Points:
+      <span class='points'> <%= question.points %></span>
+    </p>
+  </article>
+  <% end %>
+</div>
+
