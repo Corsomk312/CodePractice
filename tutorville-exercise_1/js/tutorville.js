@@ -41,7 +41,7 @@
 		},
 
 		displayTutorResults = function(d){
-			d.SeachCount = d.SearchResults.length;
+			d.SearchCount = d.SearchResults.length;
 			d.TutorCountIsNotOne = d.SearchResults.length !== 1;
 
 			$tutorResults.html(Mustache.render(tutorTemplate, d));
@@ -80,93 +80,101 @@ $(document).ready(function(){
 				dataType: "json"
 			}).done(function(results){
 
-				var info = $('.submit').serializeArray()[0].value
+				var subject = $('.submit').serializeArray()[0].value
 				var sort = $('select').val();
-
-				switch(sort){
-					case "HighR":
-						// sortByRanking(sort);
-						var tutors = sortByRanking(sort, results.SearchResults)
-						break;
-					case "LowR":
-						console.log(sort);
-						break;
-					case "HighPr":
-						console.log(sort);
-						break;
-					case "LowPr":
-						console.log(sort);
-						break;
-					default:
-						console.log(sort);
-				}
 
 				if (online && distance){
 					//parse online, distance, AND subject
-					parseTutors(parseTutorsOnline(parseTutorsDistance(results.SearchResults)), info);
-					// console.log('we parse this ish')
+					var tutors = parseTutors(parseTutorsOnline(parseTutorsDistance(results.SearchResults)), subject);
 				} else if (online){
 					//parse online AND subject
-					parseTutors(parseTutorsOnline(results.SearchResults), info);
+					var tutors = parseTutors(parseTutorsOnline(results.SearchResults), subject);
 				} else if (distance){
 					//parse distance AND subject
-					parseTutors(parseTutorsDistance(results.SearchResults), info);
+					var tutors = parseTutors(parseTutorsDistance(results.SearchResults), subject);
 				} else {
 					//parse Subject
-					parseTutors(results.SearchResults, info);
+					var tutors = parseTutors(results.SearchResults, subject);
 				};
 
+				switch(sort){
+					case "HighR":
+						tutors = sortTutors(sort, tutors, 'Rank');
+						break;
+					case "LowR":
+						tutors = sortTutors(sort, tutors, 'Rank');
+						break;
+					case "HighPr":
+						tutors = sortTutors(sort, tutors, 'HourlyRate')
+						break;
+					case "LowPr":
+						tutors = sortTutors(sort, tutors, 'HourlyRate')
+						break;
+				}
+
+				results.SearchResults = tutors
+				renderSearchResults(results);
 
 			});
 	});
 
 });
 
-//ruby spaceship comparator
-var spaceship = function(fVal, sVal){
-	if(fVal > sVal){
-		return 1
-	} else if(fVal < sVal){
-		return -1
-	} else
-		return 0
-};
+var renderSearchResults = function(d){
+	d.SearchCount = d.SearchResults.length;
+	d.TutorCountIsNotOne = d.SearchResults.length !== 1;
+	var tutorTemplate = $("#tutorTemplate").html();
+	var $tutorResults = $("#tutorResults");
 
-var sortByRanking = function(sort, tutors){
-	if (sort === 'HighR'){
-		var comparator = 1
-	} else {
-		var comparator = 0
+	var l = d.SearchResults.length;
+
+	while(l--){
+	d.SearchResults[l].starPercent = (d.SearchResults[l].StarRating/5) * 100;
 	};
 
-	for(var i=1; i < tutors.length; i++){
+	Mustache.parse(tutorTemplate);
+	$tutorResults.html(Mustache.render(tutorTemplate, d));
 
+};
 
+var sortTutors = function(direction, tutors, sortBy){
+	if (direction === 'LowR' || direction === 'HighPr'){
+		var comparator = -1
+	} else {
+		var comparator = 1
+	};
+
+	var count = 1
+	while(count < tutors.length){
+
+		if(compare(tutors[count-1][sortBy], tutors[count][sortBy]) === comparator){
+
+			var hold = tutors[count-1];
+			tutors[count-1] = tutors[count];
+			tutors[count] = hold;
+			count = 1;
+		} else {
+			count++;
+		}
 	}
-
+	return tutors;
 };
 
 
 var parseTutorsOnline = function(tutors){
-	var online_tutors = [];
-
-	for(var i =0; i < tutors.length; i++){
-		if(tutors[i].IsOnline){
-			online_tutors.push(tutors[i]);
-		};
-	};
-	return online_tutors;
+	return tutors.filter(function(tutor){
+		if(tutor.IsOnline){
+			return tutor;
+		}
+	})
 };
 
 var parseTutorsDistance = function(tutors){
-	var close_tutors = [];
-
-	for(var i =0; i < tutors.length; i++){
-		if(tutors[i].Distance < 5.0){
-			close_tutors.push(tutors[i]);
-		};
-	};
-	return close_tutors;
+	return tutors.filter(function(tutor){
+		if(tutor.Distance < 5.0){
+			return tutor;
+		}
+	})
 };
 
 var parseTutors = function(tutors, subject){
@@ -175,7 +183,9 @@ var parseTutors = function(tutors, subject){
 	for(var i =0; i < tutors.length; i++){
 		for(var j =0; j < tutors[i].Subjects.length; j++){
 
-			if(subject.toLowerCase() === tutors[i].Subjects[j].toLowerCase().slice(0, subject.length)){
+			if(subject.length == 0){
+				return [];
+			}else if(subject.toLowerCase() === tutors[i].Subjects[j].toLowerCase().slice(0, subject.length)){
 				matching_tutors.push(tutors[i]);
 			};
 

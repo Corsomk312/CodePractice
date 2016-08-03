@@ -1,0 +1,13 @@
+    var response = {"delivery_info":
+    {"delivery_available":false,
+    "final_charge":"0.00",
+    "message":"Please try again with a future delivery date"
+    ,"zip_code":"60608",
+    "same_day_cutoff":"00:00:01",
+    "next_day_charge":"0.00",
+    "same_day_available":false,
+    "same_day_charge":"10.00",
+    "saturday_available":false,
+    "saturday_charge":"0.00",
+    "sunday_available":false,
+    "sunday_charge":0}};
