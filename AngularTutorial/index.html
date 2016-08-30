@@ -1,4 +1,4 @@
-<<html>
+<html>
 <head>
   <title>My Angular App!</title>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
@@ -8,5 +8,9 @@
   <div ng-repeat="post in posts | orderBy: '-upvotes'">
     {{post.title}} - upvotes: {{post.upvotes}}
   </div>
+  <form ng-submit="addPost()">
+    <input type="text" ng-model="title"></input>
+    <button type="submit">Post</button>
+  </form>
 </body>
 </html>
