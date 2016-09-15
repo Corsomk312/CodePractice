@@ -1,15 +1,37 @@
-angular.module('flapperNews',[])
+angular.module('flapperNews',['ui.router'])
+.config([
+  '$stateProvider',
+  '$urlRouterProvider',
+  function($stateProvider, $urlRouterProvider){
+    $stateProvider
+      .state('home', {
+        url: '/home',
+        templateUrl: '/home.html',
+        controller: 'MainCtrl'
+      })
+    .state('posts', {
+      url: '/posts/{id}',
+      templateUrl: '/posts.html',
+      controller: 'PostsCtrl'
+    })
+    $urlRouterProvider.otherwise('home');
+  },
+
+])
+
+.factory('posts', [function(){
+  var o = {
+    posts: []
+  };
+  return o
+}])
+
 .controller('MainCtrl',[
   '$scope',
-  function($scope){
+  'posts',
+  function($scope, posts){
     $scope.test = 'Hello worlds!';
-    $scope.posts = [
-      {title: 'post 1', upvotes: 5},
-      {title: 'post 2', upvotes: 6},
-      {title: 'post 3', upvotes: 14},
-      {title: 'post 4', upvotes: 2},
-      {title: 'post 5', upvotes: 6}
-    ]
+    $scope.posts = posts.posts;
 
     $scope.addPost = function(){
       if(!$scope.title || $scope.title === ''){
@@ -18,7 +40,11 @@ angular.module('flapperNews',[])
       $scope.posts.push({
         title: $scope.title,
         link: $scope.link,
-        upvotes: 0
+        upvotes: 0,
+        comments: [
+          {author: 'Joe', body: 'shut the fuck up', upvotes:0},
+          {author: 'Mike', body: 'Great idea! Not!', upvotes: 0}
+        ]
       });
       $scope.title= '';
       $scope.link= '';
@@ -27,4 +53,29 @@ angular.module('flapperNews',[])
     $scope.incrementUpvotes = function(post) {
       post.upvotes += 1
     }
-  }]);
+  }])
+
+  .controller('PostsCtrl', [
+    '$scope',
+    '$stateParams',
+    'posts',
+    function($scope, $stateParams, posts){
+      $scope.post = posts.posts[$stateParams.id];
+
+    $scope.incrementUpvotes = function(comment) {
+      comment.upvotes += 1
+    }
+
+    $scope.addComment = function(){
+      if($scope.body === '') {
+        return;
+      }
+
+      $scope.post.comments.push({
+        body: $scope.body,
+        author: 'user',
+        upvotes: 0
+      });
+      $scope.body = '';
+    };
+    }]);
